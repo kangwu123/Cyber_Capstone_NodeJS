@@ -1,0 +1,97 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/modules-system/prisma/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Comments {
+  id           Int       @id @default(autoincrement())
+  job_id       Int?
+  user_id      Int?
+  comment_date DateTime? @default(now()) @db.DateTime(0)
+  content      String?   @db.Text
+  rating_stars Int?
+  create_date  DateTime? @default(now()) @db.DateTime(0)
+  Jobs         Jobs?     @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comments_ibfk_1")
+  Users        Users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comments_ibfk_2")
+
+  @@index([job_id], map: "job_id")
+  @@index([user_id], map: "user_id")
+}
+
+model HiredJobs {
+  id           Int       @id @default(autoincrement())
+  job_id       Int?
+  hirer_id     Int?
+  hire_date    DateTime? @default(now()) @db.DateTime(0)
+  is_completed Boolean?  @default(false)
+  create_date  DateTime? @default(now()) @db.DateTime(0)
+  Jobs         Jobs?     @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "HiredJobs_ibfk_1")
+  Users        Users?    @relation(fields: [hirer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "HiredJobs_ibfk_2")
+
+  @@index([hirer_id], map: "hirer_id")
+  @@index([job_id], map: "job_id")
+}
+
+model JobCategories {
+  id               Int                @id @default(autoincrement())
+  category_name    String             @db.VarChar(255)
+  JobSubCategories JobSubCategories[]
+}
+
+model JobSubCategories {
+  id                Int            @id @default(autoincrement())
+  sub_category_name String         @db.VarChar(255)
+  image             String?        @db.VarChar(255)
+  category_id       Int?
+  JobCategories     JobCategories? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "JobSubCategories_ibfk_1")
+  Jobs              Jobs[]
+
+  @@index([category_id], map: "category_id")
+}
+
+model Jobs {
+  id                Int               @id @default(autoincrement())
+  job_name          String            @db.VarChar(255)
+  rating            Int?              @default(0)
+  price             Int
+  image             String?           @db.VarChar(255)
+  description       String?           @db.Text
+  short_description String?           @db.VarChar(500)
+  job_stars         Int?              @default(0)
+  sub_category_id   Int?
+  creator_id        Int?
+  create_date       DateTime?         @default(now()) @db.DateTime(0)
+  Comments          Comments[]
+  HiredJobs         HiredJobs[]
+  JobSubCategories  JobSubCategories? @relation(fields: [sub_category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Jobs_ibfk_1")
+  Users             Users?            @relation(fields: [creator_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Jobs_ibfk_2")
+
+  @@index([creator_id], map: "creator_id")
+  @@index([sub_category_id], map: "sub_category_id")
+}
+
+model Users {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  email         String      @unique(map: "email") @db.VarChar(255)
+  password      String      @db.VarChar(255)
+  phone         String?     @db.VarChar(20)
+  birth_day     DateTime?   @db.Date
+  gender        String?     @db.VarChar(10)
+  role          String      @db.VarChar(50)
+  skill         String?     @db.Text
+  certification String?     @db.Text
+  refresh_token String?     @db.VarChar(255)
+  lastLoginAt   DateTime?   @db.DateTime(0)
+  create_date   DateTime?   @default(now()) @db.DateTime(0)
+  isDeleted     Boolean     @default(false)
+  avatar        String?     @db.VarChar(255)
+  Comments      Comments[]
+  HiredJobs     HiredJobs[]
+  Jobs          Jobs[]
+}
