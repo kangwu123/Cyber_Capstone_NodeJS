@@ -3,17 +3,17 @@ import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, IsOptional, IsDate
 export class RegisterRequestDto {
     @IsString()
     @IsNotEmpty()
-    name!: string;
+    name: string;
 
     @IsEmail()
     @IsNotEmpty()
-    email!: string;
+    email: string;
 
     @IsString()
     @IsNotEmpty()
     @MinLength(6, { message: 'Password must be at least 6 characters' })
     @MaxLength(50, { message: 'Password must be less than 50 characters' })
-    password!: string;
+    password: string;
 
     @IsString()
     @IsOptional()

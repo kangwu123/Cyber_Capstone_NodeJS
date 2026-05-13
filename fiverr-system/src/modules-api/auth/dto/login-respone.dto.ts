@@ -6,28 +6,28 @@ export class TokenDto {
 }
 
 export class LoginResponseDto {
-  @Expose() id!: number;
-  @Expose() name!: string;
-  @Expose() email!: string;
+  @Expose() id: number;
+  @Expose() name: string;
+  @Expose() email: string;
   @Expose()
   @Transform(({ value }) => value ?? '')
-  phone!: string;
+  phone: string;
   @Expose() @Transform(({ value }) => value ?? '')
   birth_day!: Date;
   @Expose() @Transform(({ value }) => value ?? '')
-  gender!: string;
-  @Expose() role!: string;
+  gender: string;
+  @Expose() role: string;
   @Expose() @Transform(({ value }) => value ?? '')
-  skill!: string;
+  skill: string;
   @Expose() @Transform(({ value }) => value ?? '')
-  certification!: string;
+  certification: string;
 
   @Exclude()
   password?: string;
 
   @Expose()
   @Type(() => TokenDto)
-  tokens!: TokenDto;
+  tokens: TokenDto;
 
   constructor(partial: Partial<LoginResponseDto>) {
     Object.assign(this, partial);

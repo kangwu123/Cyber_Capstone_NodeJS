@@ -1,6 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 
-export class RegisterResponseDto {
+export class UserResponseDto {
   @Expose() id: number;
   @Expose() name: string;
   @Expose() email: string;
@@ -27,10 +27,15 @@ export class RegisterResponseDto {
 
   @Expose() role: string;
 
+  @Expose()
+  @Transform(({ value }) => value ?? '')
+  avatar: string;
+
   @Exclude()
   password?: string;
 
-  constructor(partial: Partial<RegisterResponseDto>) {
+  constructor(partial: Partial<UserResponseDto>) {
     Object.assign(this, partial);
   }
 }
+
