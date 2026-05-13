@@ -5,12 +5,10 @@ import { ResponseSuccessInterceptor } from './common/interceptors/response-succe
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/interceptors/http-exception.filter';
 import { setupSwagger } from './common/constants/app.swagger';
-import { ConfigService } from '@nestjs/config';
 import {PORT} from './common/constants/app.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
   app.useGlobalInterceptors(new LoggingInterceptor());
   // Khai báo Global Interceptor để tự động lọc dữ liệu dựa trên DTO (@Exclude, @Expose)
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
