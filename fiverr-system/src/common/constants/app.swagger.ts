@@ -6,13 +6,25 @@ export function setupSwagger(app: INestApplication): void {
         .setTitle('Fiverr Market System API')
         .setDescription('Danh sách API cho Fiverr Market System')
         .setVersion('1.0')
-        .addBearerAuth()
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT'
+            },
+            'access-token'
+        )
+        .addApiKey(
+            {
+                type: 'apiKey',
+                name: 'TokenCybersoft',
+                in: 'header',
+            },
+            'cybersoft-token'
+        )
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, document, {
-        swaggerOptions: {
-            persistAuthorization: true,
-        },
-    });
+    document.security = [{ 'access-token': [], 'cybersoft-token': [] }];
+    SwaggerModule.setup('api/docs', app, document);
 }
